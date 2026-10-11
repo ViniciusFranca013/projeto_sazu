@@ -1,0 +1,41 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('ocorrencias', function (Blueprint $table) {
+            $table->id('Id_reclamacao');
+            $table->unsignedBigInteger('FK_CIDADAO_Id_cidadao');
+            $table->unsignedBigInteger('FK_LOCAL_MAPA_Id_mapa');
+            $table->string('Tipo_ocorrencia', 15);
+            $table->string('Rua', 50);
+            $table->string('Numero', 10);
+            $table->string('Cidade', 30);
+            $table->string('situação', 40);
+            $table->string('CEP', 11);
+            $table->string('foto', 1);
+            $table->string('descricao_problema', 250);
+            $table->string('prioridade_problema', 15);
+            $table->string('bairro');
+            $table->date('data_ocorrencia', 30);
+            $table->foreign('FK_CIDADAO_Id_cidadao')->references('id_cidadao')->on('cidadaos');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('ocorrencias');
+    }
+};
