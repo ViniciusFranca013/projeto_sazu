@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ocorrencia;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Cidadao;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class OcorrenciaController extends Controller
     public function index()
     {
         $ocorrencias = Ocorrencia::latest()->paginate(10);
-        return view('ocorrencias.index', compact('ocorrencias'));
+        return view('cidadaos.index', compact('cidadaos'));
     }
 
     /**
@@ -33,37 +34,32 @@ class OcorrenciaController extends Controller
      */
     public function store(Request $request)
     {
-        
-
         $validatedData = $request->validate([
             'Tipo_ocorrencia' => 'required|max:255',
             'Rua' => 'required|max:255',
             'Numero' => 'required|max:255',
             'Cidade' => 'required|max:255',
-            'situação' => 'required|max:255',
             'CEP' => 'required|max:255',
-            'foto' => 'required|max:255',
+           'foto' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'descricao_problema' => 'required|max:255',
             'prioridade_problema' => 'required|max:255',
             'bairro'=> 'required|max:255',
-            'data_ocorrencia' => 'required|max:255',
+            'data_ocorrencia' => 'required|date',
         ]);
 
+        
+        $foto =  rand(0,9999) . '-' . $request->file('foto')->getClientOriginalName();
+        $path = $request->file('foto')->storeAs('uploads', $foto);
+
+        $validatedData['foto'] = $path;
+
+        $validatedData['situação'] = 'Em análise'; // ALTERADO
         $user = auth()->user();
         $id_usuario = $user->id;
-
         $cidadao = Cidadao::where('fk_usuario', $id_usuario)->first();
-
         $validatedData['FK_CIDADAO_Id_cidadao'] = $cidadao->Id_cidadao;
-
-        
-
         Ocorrencia::create($validatedData);
-
-       
-     
-
-        return redirect()->route('cidadaos.index')->with('success', 'Ocorrencia created successfully.');
+        return redirect()->route('cidadaos.index')->with('success', 'Ocorrencia registrada com sucesso.');
     }
 
     /**
@@ -87,7 +83,49 @@ class OcorrenciaController extends Controller
      */
     public function update(Request $request, Ocorrencia $ocorrencia)
     {
-        //
+        $validatedData = $request->validate([
+            'Tipo_ocorrencia' => 'required|max:255',
+            'Rua' => 'required|max:255',
+            'Numero' => 'required|max:255',
+            'Cidade' => 'required|max:255',
+            'CEP' => 'required|max:255',
+           'foto' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
+            'descricao_problema' => 'required|max:255',
+            'prioridade_problema' => 'required|max:255',
+            'bairro'=> 'required|max:255',
+            'data_ocorrencia' => 'required|date',
+        ]);
+
+        $ocorrencia->update($validatedData);
+
+        $fotoAntiga = $ocorrencia->foto;
+
+        // NOVO: verifica se o usuário selecionou uma nova foto
+        if ($request->hasFile('foto')) {
+
+            // NOVO: cria um nome para a nova foto
+            $nomeFoto = uniqid() . '.' .
+                $request->file('foto')->getClientOriginalExtension();
+
+            // NOVO: salva a nova foto em storage/app/public/uploads
+            $caminhoNovo = $request->file('foto')->storeAs(
+                'uploads',
+                $nomeFoto,
+                'public'
+            );
+
+            // NOVO: atualiza o caminho da foto no banco
+            $validatedData['foto'] = $caminhoNovo;
+        }
+
+        // Atualiza os dados da ocorrência
+        $ocorrencia->update($validatedData);
+
+        // NOVO: exclui a foto antiga somente depois da atualização
+        if ($request->hasFile('foto') && $fotoAntiga) {
+            Storage::disk('public')->delete($fotoAntiga);
+        }
+        return redirect()->route('cidadaos.index')->with('success', 'Ocorrencia atualizada com sucesso.');
     }
 
     /**
@@ -97,6 +135,6 @@ class OcorrenciaController extends Controller
     {
         $ocorrencia->delete();
 
-        return redirect()->route('ocorrencias.index')->with('success', 'Post deleted successfully.');
+        return redirect()->route('cidadaos.index')->with('success', 'Ocorrência deletada com sucesso.');
     }
 }

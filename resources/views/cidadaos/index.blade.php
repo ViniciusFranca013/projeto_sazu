@@ -48,6 +48,11 @@
             font-weight: bold;
             margin-left: 8%;
         }
+
+        figure{
+           width: 180px; height: 140px; object-fit: cover; border-radius: 8px;
+            
+        }
         </style>
     </head>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -167,7 +172,9 @@
                                 </td>
 
                                 <td>
-                                    {{ $ocorrencia->data_ocorrencia }}
+                                    <figure>
+                                        <img src="{{ asset("storage/{$ocorrencia->foto}") }}" alt="[imagem]">
+                                    </figure>
                                 </td>
 
                                 <td>
@@ -222,8 +229,7 @@
                                         <div class="modal-body">
 
                                             <div class="imagem-modal text-center">
-                                                <img src="/imagens/lixo.png"
-                                                     style="width:128px;height:128px;">
+                                                <img src="{{ asset("storage/{$ocorrencia->foto}") }}" alt="[imagem]">
                                             </div>
 
                                             <div class="fonte-modal text-center">
@@ -293,3 +299,4 @@
 
     </body>
 </html>
+

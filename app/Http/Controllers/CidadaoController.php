@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+
 
 class CidadaoController extends Controller
 {
@@ -86,10 +88,17 @@ class CidadaoController extends Controller
 
         
 
-       $validatedData['fk_usuario'] = $user->id;
-       Cidadao::create($validatedData);
+      $validatedData['fk_usuario'] = $user->id;
+        Cidadao::create($validatedData);
 
-        return redirect()->route('cidadaos.index')->with('success', 'Post created successfully.');
+        // ALTERADO: autentica o usuário recém-criado
+        Auth::login($user);
+
+        // ALTERADO: regenera a sessão após o login
+        $request->session()->regenerate();
+
+        return redirect()->route('cidadaos.index')
+            ->with('success', 'Cadastro realizado com sucesso!');
     }
 
     /**
