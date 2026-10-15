@@ -4,9 +4,11 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <title>Perfil Cidadão</title>
         <style>
+        
             body{
                 background-color: #f7f7f7;
             }
@@ -58,6 +60,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
     <body>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
      @foreach($cidadaos as $item)
 
         <nav class="navbar navbar-expand-lg bg-white">
@@ -101,6 +104,17 @@
                 </table>
             </div>
             -->
+            <!-- MAPA DE OCORRÊNCIAS -->
+
+            <div class="mb-4">
+                <h5 class="mb-3">Mapa de ocorrências</h5>
+
+            <div id="mapa-ocorrencias"
+                style="height: 400px; width: 100%; border-radius: 8px; background-color: lightgray;">
+            </div>
+
+            </div>
+            <!-- FIM DO MAPA DE OCORRÊNCIAS -->
 
    <div class="container">
 
@@ -299,4 +313,20 @@
 
     </body>
 </html>
+<script>
+    // Inicializar o mapa de ocorrências do SAZU
+    document.addEventListener('DOMContentLoaded', function () {
+        const elementoMapa = document.getElementById('mapa-ocorrencias');
+
+        if (!elementoMapa) {
+            return;
+        }
+
+        const mapa = L.map('mapa-ocorrencias').setView([-23.5015, -47.4526], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(mapa);
+    });
+</script>
 

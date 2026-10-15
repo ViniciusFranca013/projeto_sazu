@@ -5,8 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans p-6">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <!--início do card-->
     <div class="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
@@ -92,6 +94,37 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
             -->
+
+            <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Localização da ocorrência
+                    </label>
+
+                <button type="button"
+                        id="btn-localizar"
+                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                    Obter minha localização pelo GPS
+                </button>
+
+                <p id="status-localizacao" class="mt-2 text-sm text-gray-600">
+                    Clique no botão para informar a localização.
+                </p>
+
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+
+            </div>
+                <!-- FIM DA LOCALIZAÇÃO GPS -->
+                <!-- MAPA PARA CONFIRMAR A LOCALIZAÇÃO -->
+
+                <div id="mapa-cadastro-ocorrencia"
+                    style="height: 350px; width: 100%; border-radius: 8px; margin-top: 15px;">
+                </div>
+
+                <p class="mt-2 text-sm text-gray-600">
+                    Arraste o marcador ou clique no mapa para ajustar o local da ocorrência.
+                </p>
+            <!-- FIM DO MAPA -->
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     FOTO
@@ -181,5 +214,110 @@ document.getElementById('CEP').addEventListener('blur', async function () {
     } catch (erro) {
         alert('Erro ao consultar o CEP. Verifique sua conexão.');
     }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const botao = document.getElementById('btn-localizar');
+    const status = document.getElementById('status-localizacao');
+    const campoLatitude = document.getElementById('latitude');
+    const campoLongitude = document.getElementById('longitude');
+    const elementoMapa = document.getElementById('mapa-cadastro-ocorrencia');
+
+    if (!elementoMapa || typeof L === 'undefined') {
+        if (status) {
+            status.textContent = 'Não foi possível carregar o mapa. Verifique sua conexão.';
+        }
+        return;
+    }
+
+    // Centralização inicial: Sorocaba
+    const mapa = L.map(elementoMapa).setView([-23.5015, -47.4526], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(mapa);
+
+    let marcador = null;
+
+    // Atualiza o marcador e os campos que serão enviados ao Laravel
+    function definirLocalizacao(lat, lng) {
+        campoLatitude.value = lat.toFixed(7);
+        campoLongitude.value = lng.toFixed(7);
+
+        if (marcador) {
+            marcador.setLatLng([lat, lng]);
+        } else {
+            marcador = L.marker([lat, lng], {
+                draggable: true
+            }).addTo(mapa);
+
+            marcador.on('dragend', function () {
+                const ponto = marcador.getLatLng();
+
+                campoLatitude.value = ponto.lat.toFixed(7);
+                campoLongitude.value = ponto.lng.toFixed(7);
+
+                status.textContent = 'Local ajustado. Confira o ponto antes de cadastrar.';
+            });
+        }
+
+        status.textContent = 'Local selecionado. Você pode arrastar o marcador ou clicar no mapa para ajustar.';
+
+        mapa.panTo([lat, lng]);
+    }
+
+    // Clicar em qualquer lugar do mapa reposiciona o marcador
+    mapa.on('click', function (evento) {
+        definirLocalizacao(evento.latlng.lat, evento.latlng.lng);
+    });
+
+    // Solicitar a localização do dispositivo
+    if (botao) {
+        botao.addEventListener('click', function () {
+            if (!navigator.geolocation) {
+                status.textContent = 'Seu navegador não oferece suporte à localização.';
+                return;
+            }
+
+            status.textContent = 'Obtendo localização...';
+            botao.disabled = true;
+
+            navigator.geolocation.getCurrentPosition(
+                function (posicao) {
+                    definirLocalizacao(
+                        posicao.coords.latitude,
+                        posicao.coords.longitude
+                    );
+
+                    mapa.setZoom(17);
+                    botao.disabled = false;
+                },
+                function (erro) {
+                    const mensagens = {
+                        1: 'Permissão negada. Autorize a localização no navegador.',
+                        2: 'Não foi possível determinar a localização.',
+                        3: 'Tempo esgotado. Tente novamente.'
+                    };
+
+                    status.textContent =
+                        mensagens[erro.code] || 'Erro ao obter a localização.';
+
+                    botao.disabled = false;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 15000,
+                    maximumAge: 0
+                }
+            );
+        });
+    }
+
+    // Corrige a renderização caso o mapa seja inicializado em um contêiner ainda não visível
+    setTimeout(function () {
+        mapa.invalidateSize();
+    }, 200);
 });
 </script>

@@ -21,6 +21,8 @@ class Ocorrencia extends Model
     'descricao_problema',
     'prioridade_problema',
     'bairro',
-    'data_ocorrencia'
+    'data_ocorrencia',
+    'longitude',
+    'latitude'
     ];
 }
