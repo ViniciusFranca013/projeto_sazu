@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Create Post</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body class="bg-gray-100 text-gray-800 font-sans p-6">
 
@@ -92,6 +94,26 @@
                 <input type="text" id="situação" name="situação" value="{{ old('situação', $ocorrencia->situação) }}" required 
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
+
+            {{-- MAPA DE LOCALIZAÇÃO DA OCORRÊNCIA --}}
+                <div class="mt-6">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Localização da ocorrência
+                    </label>
+
+                    <p class="text-sm text-gray-500 mb-3">
+                        Arraste o marcador para corrigir a localização, se necessário.
+                    </p>
+
+                    <div id="map" style="height: 350px; width: 100%;"></div>
+
+                    {{-- Coordenadas atuais da ocorrência --}}
+                    <input type="hidden" id="latitude" name="latitude"
+                        value="{{ old('latitude', $ocorrencia->latitude) }}">
+
+                    <input type="hidden" id="longitude" name="longitude"
+                        value="{{ old('longitude', $ocorrencia->longitude) }}">
+                </div>
             
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
@@ -142,5 +164,67 @@ document.getElementById('FOTO').addEventListener('change', function(event) {
         preview.src = URL.createObjectURL(arquivo);
         preview.classList.remove('hidden');
     }
+});
+</script>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const campoLatitude = document.getElementById('latitude');
+    const campoLongitude = document.getElementById('longitude');
+
+    // Usa as coordenadas salvas na ocorrência.
+    // Se não existirem, centraliza inicialmente em Sorocaba.
+    const latitudeSalva = parseFloat(campoLatitude.value);
+    const longitudeSalva = parseFloat(campoLongitude.value);
+
+    const coordenadasValidas =
+        campoLatitude.value.trim() !== '' &&
+        campoLongitude.value.trim() !== '' &&
+        Number.isFinite(latitudeSalva) &&
+        Number.isFinite(longitudeSalva) &&
+        latitudeSalva >= -90 && latitudeSalva <= 90 &&
+        longitudeSalva >= -180 && longitudeSalva <= 180;
+
+    const latitudeInicial = coordenadasValidas ? latitudeSalva : -23.5015;
+    const longitudeInicial = coordenadasValidas ? longitudeSalva : -47.4526;
+
+    // Cria o mapa
+    const mapa = L.map('map').setView(
+        [latitudeInicial, longitudeInicial],
+        16
+    );
+
+    // Carrega o mapa do OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(mapa);
+
+    // Cria um marcador que pode ser arrastado
+    const marcador = L.marker(
+        [latitudeInicial, longitudeInicial],
+        { draggable: true }
+    ).addTo(mapa);
+
+    // Atualiza os campos ocultos com as coordenadas do marcador
+    function atualizarCoordenadas(latlng) {
+        campoLatitude.value = latlng.lat.toFixed(7);
+        campoLongitude.value = latlng.lng.toFixed(7);
+    }
+
+    atualizarCoordenadas(marcador.getLatLng());
+
+    // Atualiza as coordenadas quando o usuário move o marcador
+    marcador.on('dragend', function () {
+        atualizarCoordenadas(marcador.getLatLng());
+    });
+
+    // Corrige a exibição do mapa se ele estiver dentro de uma área
+    // que inicialmente estava oculta ou acabou de ser exibida.
+    setTimeout(function () {
+        mapa.invalidateSize();
+    }, 100);
 });
 </script>

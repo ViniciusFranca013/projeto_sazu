@@ -313,8 +313,9 @@
 
     </body>
 </html>
+
+
 <script>
-    // Inicializar o mapa de ocorrências do SAZU
     document.addEventListener('DOMContentLoaded', function () {
         const elementoMapa = document.getElementById('mapa-ocorrencias');
 
@@ -322,11 +323,187 @@
             return;
         }
 
-        const mapa = L.map('mapa-ocorrencias').setView([-23.5015, -47.4526], 12);
+        const mapa = L.map('mapa-ocorrencias')
+            .setView([-23.5015, -47.4526], 12);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(mapa);
+
+        // Ocorrências recebidas do Controller
+        const ocorrencias = @json($ocorrenciasMapa ?? []);
+
+        // Base pública das imagens armazenadas no Laravel
+        const caminhoFotos = @json(asset('storage'));
+
+        // NOVO: protege os textos exibidos dentro do card
+        function escaparHTML(valor) {
+            return String(valor ?? 'Não informado').replace(/[&<>"']/g, function (caractere) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[caractere];
+            });
+        }
+
+        ocorrencias.forEach(function (ocorrencia) {
+            const latitude = Number(ocorrencia.latitude);
+            const longitude = Number(ocorrencia.longitude);
+
+            if (
+                !Number.isFinite(latitude) ||
+                !Number.isFinite(longitude) ||
+                latitude < -90 || latitude > 90 ||
+                longitude < -180 || longitude > 180 ||
+                (latitude === 0 && longitude === 0)
+            ) {
+                return;
+            }
+
+           // const marcador = L.marker([latitude, longitude]).addTo(mapa);
+           
+            // NOVO: definir a cor conforme a prioridade
+            
+            // NOVO: identificar a prioridade da ocorrência
+            const prioridade = String(
+                ocorrencia.prioridade_problema ?? ''
+            )
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .trim()
+                .toLowerCase();
+
+            // NOVO: escolher a cor conforme a prioridade
+            let corPonto = 'gray';
+
+            if (prioridade.includes('alta')) {
+                corPonto = 'red';
+            } else if (prioridade.includes('media')) {
+                corPonto = 'gold';
+            } else if (prioridade.includes('baixa')) {
+                corPonto = 'blue';
+            }
+            // NOVO: marcador laranja vivo para prioridade Alta
+            const marcadorLaranja = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="41" viewBox="0 0 25 41">
+                    <path d="M12.5 0C5.6 0 0 5.6 0 12.5C0 21.5 12.5 41 12.5 41S25 21.5 25 12.5C25 5.6 19.4 0 12.5 0Z"
+                        fill="#FF8C00" stroke="#FFFFFF" stroke-width="1.5"/>
+                    <circle cx="12.5" cy="12.5" r="4" fill="#FFFFFF"/>
+                </svg>
+            `;
+
+            // Marcador original do Leaflet, preservando seu formato
+            const marcador = L.marker([latitude, longitude], {
+                icon: L.icon({
+                    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${corPonto}.png`,
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            }).addTo(mapa);
+
+
+
+            // Monta o endereço
+            const endereco = [
+                ocorrencia.Rua,
+                ocorrencia.Numero,
+                ocorrencia.bairro,
+                ocorrencia.Cidade
+            ].filter(Boolean).join(', ');
+
+            // NOVO: monta o caminho da foto
+            let fotoHTML = '';
+
+            if (ocorrencia.foto) {
+                const caminhoFoto = caminhoFotos + '/' +
+                    String(ocorrencia.foto)
+                        .replace(/^\/+/, '')
+                        .split('/')
+                        .map(parte => encodeURIComponent(parte))
+                        .join('/');
+
+                fotoHTML = `
+                    <img
+                        src="${escaparHTML(caminhoFoto)}"
+                        alt="Foto da ocorrência"
+                        style="width:100%; height:130px; object-fit:cover;
+                               display:block; border-radius:8px 8px 0 0;"
+                        onerror="this.style.display='none';"
+                    >
+                `;
+            } else {
+                fotoHTML = `
+                    <div style="height:100px; display:flex; align-items:center;
+                                justify-content:center; background:#f1f1f1;">
+                        Foto não disponível
+                    </div>
+                `;
+            }
+
+            // NOVO: formata a data para o padrão brasileiro
+            let dataFormatada = 'Não informada';
+
+            if (ocorrencia.data_ocorrencia) {
+                const data = String(ocorrencia.data_ocorrencia).split(' ')[0];
+                const partes = data.split('-');
+
+                if (partes.length === 3) {
+                    dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                } else {
+                    dataFormatada = data;
+                }
+            }
+
+            // NOVO: cria o card com a foto e as informações
+            
+                const card = `
+                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}"
+                    style="display:block; width:260px; max-width:100%;
+                            color:#212529; text-decoration:none; font-family:Arial,sans-serif;">
+
+                        ${fotoHTML}
+
+                        <div style="padding:12px;">
+                            <p style="margin:5px 0;">
+                                <strong>Tipo:</strong>
+                                ${escaparHTML(ocorrencia.Tipo_ocorrencia)}
+                            </p>
+
+                            <p style="margin:5px 0;">
+                                <strong>Prioridade:</strong>
+                                ${escaparHTML(ocorrencia.prioridade_problema)}
+                            </p>
+
+                            <p style="margin:5px 0;">
+                                <strong>Situação:</strong>
+                                ${escaparHTML(ocorrencia['situação'])}
+                            </p>
+
+                            <p style="margin:5px 0;">
+                                <strong>Data:</strong>
+                                ${escaparHTML(dataFormatada)}
+                            </p>
+
+                            <div style="margin-top:12px; padding-top:10px;
+                                        border-top:1px solid #ddd; color:#0d6efd;
+                                        font-weight:bold; text-align:center;">
+                                Clique para ver a ocorrência completa →
+                            </div>
+                        </div>
+                    </a>
+                `;
+
+
+            marcador.bindPopup(card, {
+                maxWidth: 240,
+                 minWidth: 220
+            });
+        });
     });
 </script>
-

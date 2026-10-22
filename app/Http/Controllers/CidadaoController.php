@@ -19,22 +19,36 @@ class CidadaoController extends Controller
     public function index()
     {
 
-                $usertype = Auth()->user()->usertype; 
+            $usertype = Auth()->user()->usertype; 
             $user_id = Auth()->user()->id; 
-            
             $cidadaos = DB::select('SELECT * FROM cidadaos WHERE fk_usuario = ?',[$user_id]); 
-            
-            $cidadaos_id = DB::selectOne('SELECT Id_cidadao FROM cidadaos WHERE fk_usuario = ?', [$user_id]); 
-                        
+            $cidadaos_id = DB::selectOne('SELECT Id_cidadao FROM cidadaos WHERE fk_usuario = ?', [$user_id]);      
             $ocorrencias = DB::select('SELECT * FROM ocorrencias WHERE FK_CIDADAO_Id_cidadao = ?',
              [$cidadaos_id->Id_cidadao] // ALTERADO: pega o Id_cidadao dentro do objeto
-                );
+);
+
+        // NOVO: busca todas as ocorrências que possuem localização
+        $ocorrenciasMapa = Ocorrencia::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get([
+                'id_reclamacao',
+                'Tipo_ocorrencia',
+                'Rua',
+                'Numero',
+                'bairro',
+                'Cidade',
+                'latitude',
+                'longitude',
+                'foto',                    // NOVO
+                'situação',                // NOVO
+                'prioridade_problema',     // NOVO
+                'data_ocorrencia'          // NOVO
+                
+            ]);
 
         if($usertype== "user")
         {
-            return view('cidadaos.index', compact('cidadaos', 'ocorrencias', 'cidadaos_id'));
-            
-
+            return view('cidadaos.index', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa'));
         }
 
         else if($usertype== 'admin')
@@ -45,6 +59,20 @@ class CidadaoController extends Controller
         else{
             return redirect()->back();
         }
+
+        // NOVO: busca as ocorrências que possuem localização
+        $ocorrencias = Ocorrencia::whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->get([
+                'id_reclamacao',
+                'Tipo_ocorrencia',
+                'Rua',
+                'Numero',
+                'bairro',
+                'Cidade',
+                'latitude',
+                'longitude'
+            ]);
         
     }
 
