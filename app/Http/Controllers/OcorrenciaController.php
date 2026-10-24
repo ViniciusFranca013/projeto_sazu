@@ -45,9 +45,12 @@ class OcorrenciaController extends Controller
             'prioridade_problema' => 'required|max:255',
             'bairro'=> 'required|max:255',
             'data_ocorrencia' => 'required|date',
-            'latitude' => 'nullable|numeric|between:-90,90',
-             'longitude' => 'nullable|numeric|between:-180,180',
-        ]);
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+        ], [
+                'latitude.required' => 'Selecione o local do mapa.',
+                'longitude.required' => 'Selecione o local do mapa.',
+            ]);
 
         
         $foto =  rand(0,9999) . '-' . $request->file('foto')->getClientOriginalName();
@@ -96,8 +99,8 @@ class OcorrenciaController extends Controller
             'prioridade_problema' => 'required|max:255',
             'bairro'=> 'required|max:255',
             'data_ocorrencia' => 'required|date',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180'
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
         ]);
 
         $ocorrencia->update($validatedData);

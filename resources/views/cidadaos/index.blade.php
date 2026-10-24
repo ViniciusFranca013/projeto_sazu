@@ -194,22 +194,12 @@
                                 <td>
                                     <a href="{{ route('ocorrencias.edit', $ocorrencia->Id_reclamacao) }}"
                                        class="btn btn-primary btn-sm">
-                                        Editar
+                                        Mais informações
                                         <i class="fa-regular fa-pen-to-square"></i>
                                     </a>
                                 </td>
 
-                                <td>
-
-                                    <button
-                                        class="btn btn-danger btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#modalExcluir{{ $ocorrencia->Id_reclamacao }}">
-                                        Excluir
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-
-                                </td>
+                               
 
                             </tr>
 

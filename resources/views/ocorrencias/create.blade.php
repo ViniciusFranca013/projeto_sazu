@@ -13,14 +13,14 @@
     <!--início do card-->
     <div class="max-w-2xl mx-auto bg-white p-6 md:p-8 rounded-lg shadow-md">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-900">REGISTRAR OCORRENCIA</h1>
+            <h1 class="text-2xl font-bold text-gray-900">REGISTRAR OCORRÊNCIA</h1>
             <a href="{{ route('cidadaos.index') }}" class="text-gray-600 hover:text-gray-900 underline text-sm transition">Voltar a página</a>
         </div>
 
         @if($errors->any())
             <div class="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded mb-6">
                 <ul class="list-disc list-inside text-sm">
-                    @foreach($errors->all() as $error)
+                    @foreach(array_unique($errors->all()) as $error)
                         <li>{{ $error }}</li>
                     @endforeach
                 </ul>
@@ -28,10 +28,14 @@
         @endif
 
         <form action="{{ route('ocorrencias.store') }}" method="POST" class="space-y-6" enctype="multipart/form-data">
+            <div id="erro-localizacao"
+                class="hidden bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-md">
+                Por favor, selecione a localização da ocorrência no mapa antes de enviar.
+            </div>
             @csrf
             <!--1° FORM-->
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo Ocorrencia</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Tipo Ocorrência</label>
                 <select type="text" id="title" name="Tipo_ocorrencia" value="{{ old('Tipo_ocorrencia') }}" required 
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
                     <option value="">Selecione uma opção</option>
@@ -42,10 +46,20 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Descrição</label>
-                <input type="text" id="descrição_problema" name="descricao_problema" value="{{ old('descrição_problema') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="50">
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Descrição
+                </label>
+                <textarea
+                    id="descricao_problema"
+                    name="descricao_problema"
+                    required
+                    maxlength="139"
+                    rows="2"
+                    placeholder="Descreva o problema encontrado..."
+                    class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition resize-y"
+                >{{ old('descricao_problema') }}</textarea>
             </div>
+
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Prioridade</label>
                 <select type="text" id="prioridade_problema" name="prioridade_problema" value="{{ old('prioridade_problema') }}" required 
@@ -273,26 +287,67 @@ document.addEventListener('DOMContentLoaded', function () {
         definirLocalizacao(evento.latlng.lat, evento.latlng.lng);
     });
 
+    
     // Solicitar a localização do dispositivo
     if (botao) {
         botao.addEventListener('click', function () {
             if (!navigator.geolocation) {
-                status.textContent = 'Seu navegador não oferece suporte à localização.';
+                status.textContent =
+                    'Seu navegador não oferece suporte à localização.';
                 return;
             }
 
-            status.textContent = 'Obtendo localização...';
+            status.textContent = 'Buscando sua localização mais precisa...';
             botao.disabled = true;
 
-            navigator.geolocation.getCurrentPosition(
-                function (posicao) {
-                    definirLocalizacao(
-                        posicao.coords.latitude,
-                        posicao.coords.longitude
-                    );
+            let melhorPrecisao = Infinity;
+            let leiturasRecebidas = 0;
+            let observadorGPS = null;
+            let finalizado = false;
 
-                    mapa.setZoom(17);
-                    botao.disabled = false;
+            function encerrarBusca(mensagem) {
+                if (finalizado) return;
+
+                finalizado = true;
+
+                if (observadorGPS !== null) {
+                    navigator.geolocation.clearWatch(observadorGPS);
+                }
+
+                status.textContent = mensagem;
+                botao.disabled = false;
+            }
+
+            observadorGPS = navigator.geolocation.watchPosition(
+                function (posicao) {
+                    const latitude = posicao.coords.latitude;
+                    const longitude = posicao.coords.longitude;
+                    const precisao = posicao.coords.accuracy;
+
+                    leiturasRecebidas++;
+
+                    // Aceita somente posições melhores que a anterior.
+                    if (precisao < melhorPrecisao) {
+                        melhorPrecisao = precisao;
+
+                        definirLocalizacao(latitude, longitude);
+
+                        mapa.setView([latitude, longitude], 17);
+
+                       status.textContent = 'Localização encontrada com sucesso';
+                    }
+
+                    // Finaliza quando a precisão é boa ou após algumas leituras.
+                    if (precisao <= 20) {
+                        encerrarBusca(
+                            `Localização obtida! Precisão estimada: ${Math.round(precisao)} metros.`
+                        );
+                    } else if (leiturasRecebidas >= 8) {
+                        encerrarBusca(
+                            `Localização obtida com precisão estimada de ${Math.round(melhorPrecisao)} metros. ` +
+                            'Se necessário, ajuste o marcador manualmente.'
+                        );
+                    }
                 },
                 function (erro) {
                     const mensagens = {
@@ -301,23 +356,73 @@ document.addEventListener('DOMContentLoaded', function () {
                         3: 'Tempo esgotado. Tente novamente.'
                     };
 
-                    status.textContent =
-                        mensagens[erro.code] || 'Erro ao obter a localização.';
-
-                    botao.disabled = false;
+                    encerrarBusca(
+                        mensagens[erro.code] || 'Erro ao obter a localização.'
+                    );
                 },
                 {
                     enableHighAccuracy: true,
-                    timeout: 15000,
+                    timeout: 30000,
                     maximumAge: 0
                 }
             );
+
+            // Evita deixar o GPS ativo indefinidamente.
+            setTimeout(function () {
+                if (finalizado) return;
+
+                if (leiturasRecebidas > 0 && melhorPrecisao < Infinity) {
+                    encerrarBusca(
+                        `Busca finalizada. Precisão estimada: ${Math.round(melhorPrecisao)} metros.`
+                    );
+                } else {
+                    encerrarBusca(
+                        'Não foi possível obter a localização a tempo. Tente novamente.'
+                    );
+                }
+            }, 30000);
         });
     }
+
 
     // Corrige a renderização caso o mapa seja inicializado em um contêiner ainda não visível
     setTimeout(function () {
         mapa.invalidateSize();
     }, 200);
 });
+</script>
+<script>
+    
+    // Impedir o envio se nenhuma localização tiver sido selecionada
+    const formulario = document.querySelector('form');
+    const erroLocalizacao = document.getElementById('erro-localizacao');
+
+    formulario.addEventListener('submit', function (evento) {
+        const latitude = campoLatitude.value.trim();
+        const longitude = campoLongitude.value.trim();
+
+        if (latitude === '' || longitude === '') {
+            evento.preventDefault();
+
+            erroLocalizacao.classList.remove('hidden');
+
+            erroLocalizacao.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+
+            status.textContent =
+                'Selecione a localização da ocorrência no mapa antes de continuar.';
+
+            return;
+        }
+
+        erroLocalizacao.classList.add('hidden');
+    });
+
+    // Ocultar o aviso quando o usuário selecionar um ponto no mapa
+    mapa.on('click', function () {
+        erroLocalizacao.classList.add('hidden');
+    });
+
 </script>
