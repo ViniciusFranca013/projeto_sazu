@@ -21,7 +21,6 @@
         "@laravel/multiplex": "^0.4.1"
     },
     "dependencies": {
-        "@rolldown/binding-win32-x64-msvc": "^1.2.11",
         "bootstrap": "^5.3.8"
     }
 }
