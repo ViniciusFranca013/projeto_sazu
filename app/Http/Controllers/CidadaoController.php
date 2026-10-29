@@ -21,11 +21,25 @@ class CidadaoController extends Controller
 
             $usertype = Auth()->user()->usertype; 
             $user_id = Auth()->user()->id; 
+            $resultado = DB::select('SELECT COUNT(*) AS total FROM ocorrencias'); 
+            $ocorrencias_aberto = $resultado[0]->total; 
+
+            $resultado_2 = DB::select('SELECT COUNT(*) AS total_1 FROM ocorrencias where situação ="Em análise" '); 
+            $ocorrencias_analise = $resultado_2[0]->total_1; 
+
+            $resultado_3 = DB::select('SELECT COUNT(*) AS total_2 FROM ocorrencias where situação ="Deferido" '); 
+            $ocorrencias_deferido = $resultado_3[0]->total_2; 
+
+            $resultado_4 = DB::select('SELECT COUNT(*) AS total_3 FROM ocorrencias where situação ="Resolvido" '); 
+            $ocorrencias_resolvido = $resultado_4[0]->total_3; 
+            
             $cidadaos = DB::select('SELECT * FROM cidadaos WHERE fk_usuario = ?',[$user_id]); 
             $cidadaos_id = DB::selectOne('SELECT Id_cidadao FROM cidadaos WHERE fk_usuario = ?', [$user_id]);      
             $ocorrencias = DB::select('SELECT * FROM ocorrencias WHERE FK_CIDADAO_Id_cidadao = ?',
-             [$cidadaos_id->Id_cidadao] // ALTERADO: pega o Id_cidadao dentro do objeto
-);
+             [$cidadaos_id->Id_cidadao]); // ALTERADO: pega o Id_cidadao dentro do objeto
+
+
+
 
         // NOVO: busca todas as ocorrências que possuem localização
         $ocorrenciasMapa = Ocorrencia::whereNotNull('latitude')
@@ -46,15 +60,17 @@ class CidadaoController extends Controller
                 
             ]);
 
-        if($usertype== "user")
+        if($usertype== 'admin')
         {
-            return view('cidadaos.index', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa'));
+            return view('admin.adminhome', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa', 'ocorrencias_aberto', 'ocorrencias_analise', 'ocorrencias_deferido'));
         }
 
-        else if($usertype== 'admin')
+        else if ($usertype== "user")
         {
-            return view('admin.adminhome');
+            return view('cidadaos.index',  compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa'));
         }
+
+        
 
         else{
             return redirect()->back();
