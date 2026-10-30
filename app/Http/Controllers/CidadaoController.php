@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 
+
 class CidadaoController extends Controller
 {
     /**
@@ -108,42 +109,44 @@ class CidadaoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-     public function store(Request $request)
-    {
+     
+public function store(Request $request)
+{
+    $validatedData = $request->validate([
+        'CPF' => 'required|unique:cidadaos,CPF|max:14',
+        'Bairro' => 'required|string',
+        'Cidade' => 'required|string',
+        'nome' => 'required|string',
+        'data_nascimento' => 'required|date',
+        'telefone' => 'required|string|unique:cidadaos,telefone|max:14',
+        'email' => 'required|string|email|max:50',
+        'cep' => 'required|string',
+        'rua' => 'required|string',
+        'numero' => 'required|string',
+    ]);
 
-        $validatedData = $request->validate([
-            'CPF' => 'required|unique:cidadaos,CPF|max:14',
-            'Bairro' => 'required|string',
-            'Cidade' => 'required|string',
-            'nome' => 'required|string',
-            'data_nascimento' => 'required|date',
-            'telefone' => 'required|string|unique:cidadaos,telefone|max:14',
-            'email' => 'required|string|email|max:50',
-            'cep' => 'required|string',
-            'rua' => 'required|string',
-            'numero' => 'required|string',
+    $user = DB::transaction(function () use ($validatedData) {
+
+        $user = User::create([
+            'usertype' => 'user',
+            'email' => $validatedData['email'],
+            'password' => Hash::make($validatedData['CPF']),
         ]);
 
-                $user = User::create([
-                'usertype'=>'user',
-                'email' => $request->email,
-                'password' => Hash::make($request->CPF),
-                ]);
+        $validatedData['fk_usuario'] = $user->id;
 
-        
-
-      $validatedData['fk_usuario'] = $user->id;
         Cidadao::create($validatedData);
 
-        // ALTERADO: autentica o usuário recém-criado
-        Auth::login($user);
+        return $user;
+    });
 
-        // ALTERADO: regenera a sessão após o login
-        $request->session()->regenerate();
+    Auth::login($user);
 
-        return redirect()->route('cidadaos.index')
-            ->with('success', 'Cadastro realizado com sucesso!');
-    }
+    $request->session()->regenerate();
+
+    return redirect()->route('cidadaos.index')
+        ->with('success', 'Cadastro realizado com sucesso!');
+}
 
     /**
      * Display the specified resource.
