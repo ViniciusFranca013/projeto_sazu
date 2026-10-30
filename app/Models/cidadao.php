@@ -1,13 +1,16 @@
 <?php
 
 namespace App\Models;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
-
-class cidadao extends Model
+class Cidadao extends Model
 {
+    protected $table = 'cidadaos';
+
+    protected $primaryKey = 'Id_cidadao';
+
     protected $fillable = [
         'CPF',
         'Bairro',
@@ -23,13 +26,11 @@ class cidadao extends Model
     ];
 
     public function usuario(): BelongsTo
-        {
-            return $this->belongsTo(
-                User::class,
-                'fk_usuario',
-                'id'
-            );
-        }
-
+    {
+        return $this->belongsTo(
+            User::class,
+            'fk_usuario',
+            'id'
+        );
+    }
 }
-

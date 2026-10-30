@@ -6,45 +6,34 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('cidadaos', function (Blueprint $table) {
             $table->id('Id_cidadao');
+
             $table->string('CPF', 14);
-            $table->string('Bairro');
-            $table->string('Cidade');
-            $table->string('nome');
-            $table->date('data_nascimento');
+            $table->string('Bairro', 255);
+            $table->string('Cidade', 255);
+            $table->string('nome', 255);
+            $table->date('data_nascimento')->nullable();
             $table->string('telefone', 20);
-            $table->string('email');
+            $table->string('email', 255);
             $table->string('cep', 9);
-            $table->string('rua');
-            $table->string('numero');
+            $table->string('rua', 255);
+            $table->string('numero', 255);
+
+            // Relacionamento com a tabela users
+            $table->unsignedBigInteger('fk_usuario');
+
             $table->timestamps();
+
+            $table->foreign('fk_usuario')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
         });
     }
-/**
-    CREATE TABLE CIDADAO (
-    Id_cidadao bigint(20) PRIMARY KEY  NOT NULL,
-    CPF varchar (14) NOT NULL,
-    Bairro VARCHAR(255) NOT NULL,
-    Cidade VARCHAR(255)  NOT NULL,
-    nome VARCHAR (55)  NOT NULL,
-    data_nascimento DATE NOT NULL,
-    telefone VARCHAR(20)  NOT NULL,
-    email VARCHAR(45)  NOT NULL,
-    cep VARCHAR(9)  NOT NULL,
-    rua VARCHAR(55)  NOT NULL,
-    numero INTEGER(9) NOT NULL
-);
- */
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('cidadaos');
