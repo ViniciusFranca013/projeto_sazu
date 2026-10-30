@@ -54,7 +54,7 @@ class OcorrenciaController extends Controller
 
         
         $foto =  rand(0,9999) . '-' . $request->file('foto')->getClientOriginalName();
-        $path = $request->file('foto')->storeAs('uploads', $foto);
+        $path = $request->file('foto')->storeAs('uploads', $foto, 'public');
 
         $validatedData['foto'] = $path;
 
