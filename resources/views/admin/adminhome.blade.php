@@ -299,7 +299,10 @@
                                         <div class="modal-body">
 
                                             <div class="imagem-modal text-center">
-                                                <img src="{{ asset("storage/{$ocorrencia->foto}") }}" alt="[imagem]">
+                                               <img
+    src="{{ route('ocorrencias.imagem', $ocorrencia->Id_reclamacao) }}"
+    alt="Imagem da ocorrência"
+>  
                                             </div>
 
                                             <div class="fonte-modal text-center">
@@ -486,7 +489,7 @@
 
                 fotoHTML = `
                     <img
-                        src="${escaparHTML(caminhoFoto)}"
+                        src="/ocorrencias/${encodeURIComponent(idOcorrencia)}/imagem"
                         alt="Foto da ocorrência"
                         style="width:100%; height:130px; object-fit:cover;
                                display:block; border-radius:8px 8px 0 0;"
