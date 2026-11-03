@@ -53,8 +53,10 @@ class OcorrenciaController extends Controller
             ]);
 
         
-        $foto =  rand(0,9999) . '-' . $request->file('foto')->getClientOriginalName();
-        $path = $request->file('foto')->storeAs('uploads', $foto, 'public');
+        // Salva a foto no disco padrão configurado pelo Laravel Cloud
+        $foto = rand(0,9999) . '-' . $request->file('foto')->getClientOriginalName();
+
+        $path = $request->file('foto')->storeAs('uploads', $foto);
 
         $validatedData['foto'] = $path;
 
@@ -86,55 +88,54 @@ class OcorrenciaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ocorrencia $ocorrencia)
-    {
-        $validatedData = $request->validate([
-            'Tipo_ocorrencia' => 'required|max:255',
-            'Rua' => 'required|max:255',
-            'Numero' => 'required|max:255',
-            'Cidade' => 'required|max:255',
-            'CEP' => 'required|max:255',
-           'foto' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
-            'descricao_problema' => 'required|max:255',
-            'prioridade_problema' => 'required|max:255',
-            'bairro'=> 'required|max:255',
-            'data_ocorrencia' => 'required|date',
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-        ]);
+   public function update(Request $request, Ocorrencia $ocorrencia)
+{
+    $validatedData = $request->validate([
+        'Tipo_ocorrencia' => 'required|max:255',
+        'Rua' => 'required|max:255',
+        'Numero' => 'required|max:255',
+        'Cidade' => 'required|max:255',
+        'CEP' => 'required|max:255',
+        'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'descricao_problema' => 'required|max:255',
+        'prioridade_problema' => 'required|max:255',
+        'bairro' => 'required|max:255',
+        'data_ocorrencia' => 'required|date',
+        'latitude' => 'required|numeric|between:-90,90',
+        'longitude' => 'required|numeric|between:-180,180',
+    ]);
 
-        $ocorrencia->update($validatedData);
+    // Guarda o caminho da foto antiga
+    $fotoAntiga = $ocorrencia->foto;
 
-        $fotoAntiga = $ocorrencia->foto;
+    // Verifica se foi selecionada uma nova foto
+    if ($request->hasFile('foto')) {
 
-        // NOVO: verifica se o usuário selecionou uma nova foto
-        if ($request->hasFile('foto')) {
+        // Cria um nome para a nova foto
+        $nomeFoto = uniqid() . '.' .
+            $request->file('foto')->getClientOriginalExtension();
 
-            // NOVO: cria um nome para a nova foto
-            $nomeFoto = uniqid() . '.' .
-                $request->file('foto')->getClientOriginalExtension();
+        // Salva no disco padrão do ambiente
+        $caminhoNovo = $request->file('foto')->storeAs(
+            'uploads',
+            $nomeFoto
+        );
 
-            // NOVO: salva a nova foto em storage/app/public/uploads
-            $caminhoNovo = $request->file('foto')->storeAs(
-                'uploads',
-                $nomeFoto,
-                'public'
-            );
-
-            // NOVO: atualiza o caminho da foto no banco
-            $validatedData['foto'] = $caminhoNovo;
-        }
-
-        // Atualiza os dados da ocorrência
-        $ocorrencia->update($validatedData);
-
-        // NOVO: exclui a foto antiga somente depois da atualização
-        if ($request->hasFile('foto') && $fotoAntiga) {
-            Storage::disk('public')->delete($fotoAntiga);
-        }
-        return redirect()->route('cidadaos.index')->with('success', 'Ocorrencia atualizada com sucesso.');
+        // Atualiza o caminho da foto no banco
+        $validatedData['foto'] = $caminhoNovo;
     }
 
+    // Atualiza os dados da ocorrência
+    $ocorrencia->update($validatedData);
+
+    // Exclui a foto antiga se uma nova foi enviada
+    if ($request->hasFile('foto') && $fotoAntiga) {
+        Storage::delete($fotoAntiga);
+    }
+
+    return redirect()->route('cidadaos.index')
+        ->with('success', 'Ocorrencia atualizada com sucesso.');
+}
     /**
      * Remove the specified resource from storage.
      */

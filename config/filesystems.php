@@ -13,8 +13,12 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DISK', 'local'),
-
+    'default' => env(
+    'FILESYSTEM_DISK',
+    env('APP_ENV') === 'production'
+        ? 'private'
+        : 'public'
+),
     /*
     |--------------------------------------------------------------------------
     | Filesystem Disks
