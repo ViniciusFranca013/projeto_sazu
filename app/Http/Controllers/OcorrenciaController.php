@@ -129,6 +129,7 @@ return response($disk->get($ocorrencia->foto))
         'descricao_problema' => 'required|max:255',
         'prioridade_problema' => 'required|max:255',
         'bairro' => 'required|max:255',
+        'situação' =>'required|max:255',
         'data_ocorrencia' => 'required|date',
         'latitude' => 'required|numeric|between:-90,90',
         'longitude' => 'required|numeric|between:-180,180',
