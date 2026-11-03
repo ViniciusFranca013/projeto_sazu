@@ -251,8 +251,10 @@
 
                                 <td>
                                     <figure>
-                                        <img src="{{ asset("storage/{$ocorrencia->foto}") }}" alt="[imagem]">
-                                    </figure>
+<img
+    src="{{ route('ocorrencias.imagem', $ocorrencia->Id_reclamacao) }}"
+    alt="Imagem da ocorrência"
+>                                    </figure>
                                 </td>
 
                                 <td>

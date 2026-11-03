@@ -18,6 +18,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/ocorrencias/{ocorrencia}/imagem', [
+    OcorrenciaController::class,
+    'imagem'
+])->name('ocorrencias.imagem');
 });
 
 Route::resource('posts', PostController::class); // add this resource route
