@@ -65,7 +65,7 @@ class CidadaoController extends Controller
 
         if($usertype== 'admin')
         {
-            return view('admin.adminhome', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa', 'ocorrencias_aberto', 'ocorrencias_analise', 'ocorrencias_deferido', ocorrencias_admin));
+            return view('admin.adminhome', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa', 'ocorrencias_aberto', 'ocorrencias_analise', 'ocorrencias_deferido', 'ocorrencias_admin'));
         }
 
         else if ($usertype== "user")
