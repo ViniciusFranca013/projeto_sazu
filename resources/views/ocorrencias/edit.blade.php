@@ -148,7 +148,7 @@
                 <div class="mt-3">
                     <img
                         id="preview-foto"
-                        src="{{ $ocorrencia->foto ? asset('storage/' . $ocorrencia->foto) : '' }}"
+                       src="{{ $ocorrencia->foto ? route('ocorrencias.imagem', $ocorrencia->Id_reclamacao) : '' }}"
                         alt="Pré-visualização da foto da ocorrência"
                         class="{{ $ocorrencia->foto ? '' : 'hidden' }} w-64 h-48 object-cover rounded-lg border border-gray-300"
                     >
