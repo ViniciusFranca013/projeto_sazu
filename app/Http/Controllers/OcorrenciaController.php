@@ -18,7 +18,7 @@ class OcorrenciaController extends Controller
     public function index()
     {
         $ocorrencias = Ocorrencia::latest()->paginate(10);
-        return view('cidadaos.index','admin.adminhome', compact('cidadaos', 'admin'));
+        return view('cidadaos.index', compact('cidadaos'));
     }
 
     /**
