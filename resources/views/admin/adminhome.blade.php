@@ -227,9 +227,9 @@
 
                 <tbody>
 
-                    @if (count($ocorrencias) > 0)
+                    @if (count($ocorrencias_admin) > 0)
 
-                        @foreach ($ocorrencias as $ocorrencia)
+                        @foreach ($ocorrencias_admin as $ocorrencia)
 
                             <tr>
 

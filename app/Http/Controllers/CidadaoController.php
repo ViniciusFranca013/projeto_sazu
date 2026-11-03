@@ -39,6 +39,8 @@ class CidadaoController extends Controller
             $ocorrencias = DB::select('SELECT * FROM ocorrencias WHERE FK_CIDADAO_Id_cidadao = ?',
              [$cidadaos_id->Id_cidadao]); // ALTERADO: pega o Id_cidadao dentro do objeto
 
+             $ocorrencias_admin = DB::select('SELECT * FROM ocorrencias');
+
 
 
 
@@ -63,7 +65,7 @@ class CidadaoController extends Controller
 
         if($usertype== 'admin')
         {
-            return view('admin.adminhome', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa', 'ocorrencias_aberto', 'ocorrencias_analise', 'ocorrencias_deferido'));
+            return view('admin.adminhome', compact('cidadaos', 'ocorrencias', 'cidadaos_id', 'ocorrenciasMapa', 'ocorrencias_aberto', 'ocorrencias_analise', 'ocorrencias_deferido', ocorrencias_admin));
         }
 
         else if ($usertype== "user")
