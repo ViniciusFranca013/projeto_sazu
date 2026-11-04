@@ -116,26 +116,24 @@
                 </label>
 
                 <select id="situação" name="situação" required
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                class="w-full px-4 py-2 border border-gray-300 rounded-md">
 
-                    <option value="">Selecione uma opção</option>
+                <option value="Em análise"
+                    @selected(old('situação', $ocorrencia->{'situação'}) == 'Em análise')>
+                    Em análise
+                </option>
 
-                    <option value="Em análise"
-                        {{ old('situação', $ocorrencia->situação) == 'Em análise' ? 'selected' : '' }}>
-                        Em análise
-                    </option>
+                <option value="Reparo em Andamento"
+                    @selected(old('situação', $ocorrencia->{'situação'}) == 'Reparo em Andamento')>
+                    Reparo em Andamento
+                </option>
 
-                    <option value="Reparo em Andamento"
-                        {{ old('situação', $ocorrencia->situação) == 'Reparo em Andamento' ? 'selected' : '' }}>
-                        Reparo em Andamento
-                    </option>
+                <option value="Reparo Realizado"
+                    @selected(old('situação', $ocorrencia->{'situação'}) == 'Reparo Realizado')>
+                    Reparo Realizado
+                </option>
 
-                    <option value="Reparo Realizado"
-                        {{ old('situação', $ocorrencia->situação) == 'Reparo Realizado' ? 'selected' : '' }}>
-                        Reparo Realizado
-                    </option>
-
-                </select>
+            </select>
             </div>
             
             
