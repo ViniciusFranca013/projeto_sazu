@@ -28,7 +28,7 @@ class CidadaoController extends Controller
             $resultado_2 = DB::select('SELECT COUNT(*) AS total_1 FROM ocorrencias where situação ="Em análise" '); 
             $ocorrencias_analise = $resultado_2[0]->total_1; 
 
-            $resultado_3 = DB::select('SELECT COUNT(*) AS total_2 FROM ocorrencias where situação ="Reparado em Andamento" '); 
+            $resultado_3 = DB::select('SELECT COUNT(*) AS total_2 FROM ocorrencias where situação ="Reparo em Andamento" '); 
             $ocorrencias_deferido = $resultado_3[0]->total_2; 
 
             $resultado_4 = DB::select('SELECT COUNT(*) AS total_3 FROM ocorrencias where situação ="Reparo Realizado" '); 
