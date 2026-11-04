@@ -126,8 +126,8 @@
                     Reparo em Andamento
                 </option>
 
-                <option value="Ocorrência Resolvida - Finalizada"
-                    @selected(old('situação', $ocorrencia->{'situação'}) == 'Ocorrência Resolvida - Finalizada')>
+                <option value="Reparo Realizado"
+                    @selected(old('situação', $ocorrencia->{'situação'}) == 'Reparo Realizado')>
                     Reparo Realizado
                 </option>
 

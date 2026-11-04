@@ -31,7 +31,7 @@ class CidadaoController extends Controller
             $resultado_3 = DB::select('SELECT COUNT(*) AS total_2 FROM ocorrencias where situação ="Reparado em Andamento" '); 
             $ocorrencias_deferido = $resultado_3[0]->total_2; 
 
-            $resultado_4 = DB::select('SELECT COUNT(*) AS total_3 FROM ocorrencias where situação ="Ocorrência Resolvida - Finalizada" '); 
+            $resultado_4 = DB::select('SELECT COUNT(*) AS total_3 FROM ocorrencias where situação ="Reparo Realizado" '); 
             $ocorrencias_resolvido = $resultado_4[0]->total_3; 
             
             $cidadaos = DB::select('SELECT * FROM cidadaos WHERE fk_usuario = ?',[$user_id]); 
