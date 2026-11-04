@@ -258,7 +258,7 @@
                                 </td>
 
                                 <td>
-                                    <a href="{{ route('ocorrencias.edit', $ocorrencia->Id_reclamacao) }}"
+                                    <a href="{{ route('ocorrencias.edit_admin', $ocorrencia->Id_reclamacao) }}"
                                        class="btn btn-primary btn-sm">
                                         Mais informações
                                         <i class="fa-regular fa-pen-to-square"></i>
