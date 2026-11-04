@@ -480,26 +480,27 @@
            
 
             // Monta o caminho da imagem pela rota privada
-            let fotoHTML = '';
+            // Monta o caminho da imagem pela rota privada
+                let fotoHTML = '';
 
-            if (ocorrencia.foto && idOcorrencia) {
-                fotoHTML = `
-                    <img
-                        src="/ocorrencias/${encodeURIComponent(idOcorrencia)}/imagem"
-                        alt="Foto da ocorrência"
-                        style="width:100%; height:130px; object-fit:cover;
-                            display:block; border-radius:8px 8px 0 0;"
-                        onerror="this.style.display='none';"
-                    >
-                `;
-            } else {
-                fotoHTML = `
-                    <div style="height:100px; display:flex; align-items:center;
-                                justify-content:center; background:#f1f1f1;">
-                        Foto não disponível
-                    </div>
-                `;
-            }
+                if (ocorrencia.foto && idOcorrencia) {
+                    fotoHTML = `
+                        <img
+                            src="/ocorrencias/${encodeURIComponent(idOcorrencia)}/imagem"
+                            alt="Foto da ocorrência"
+                            style="width:100%; height:130px; object-fit:cover;
+                                display:block; border-radius:8px 8px 0 0;"
+                            onerror="this.style.display='none';"
+                        >
+                    `;
+                } else {
+                    fotoHTML = `
+                        <div style="height:100px; display:flex; align-items:center;
+                                    justify-content:center; background:#f1f1f1;">
+                            Foto não disponível
+                        </div>
+                    `;
+                }
 
             // NOVO: formata a data para o padrão brasileiro
             let dataFormatada = 'Não informada';
@@ -518,7 +519,7 @@
             // NOVO: cria o card com a foto e as informações
             
                 const card = `
-                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}"
+                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}/edit"
                     style="display:block; width:260px; max-width:100%;
                             color:#212529; text-decoration:none; font-family:Arial,sans-serif;">
 
