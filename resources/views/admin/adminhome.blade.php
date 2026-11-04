@@ -481,6 +481,9 @@
 
             // Monta o caminho da imagem pela rota privada
             // Monta o caminho da imagem pela rota privada
+               
+
+                // Monta o caminho da imagem pela rota privada
                 let fotoHTML = '';
 
                 if (ocorrencia.foto && idOcorrencia) {
@@ -490,7 +493,7 @@
                             alt="Foto da ocorrência"
                             style="width:100%; height:130px; object-fit:cover;
                                 display:block; border-radius:8px 8px 0 0;"
-                            onerror="this.style.display='none';"
+                            onerror="this.alt='Não foi possível carregar a foto';"
                         >
                     `;
                 } else {
@@ -502,24 +505,23 @@
                     `;
                 }
 
-            // NOVO: formata a data para o padrão brasileiro
-            let dataFormatada = 'Não informada';
+                // Formata a data para o padrão brasileiro
+                let dataFormatada = 'Não informada';
 
-            if (ocorrencia.data_ocorrencia) {
-                const data = String(ocorrencia.data_ocorrencia).split(' ')[0];
-                const partes = data.split('-');
+                if (ocorrencia.data_ocorrencia) {
+                    const data = String(ocorrencia.data_ocorrencia).split(' ')[0];
+                    const partes = data.split('-');
 
-                if (partes.length === 3) {
-                    dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-                } else {
-                    dataFormatada = data;
+                    if (partes.length === 3) {
+                        dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                    } else {
+                        dataFormatada = data;
+                    }
                 }
-            }
 
-            // NOVO: cria o card com a foto e as informações
-            
+                // Cria o card clicável para a página de edição
                 const card = `
-                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}/edit"
+                    <a href="/ocorrencias/${encodeURIComponent(idOcorrencia)}/edit"
                     style="display:block; width:260px; max-width:100%;
                             color:#212529; text-decoration:none; font-family:Arial,sans-serif;">
 
@@ -549,7 +551,7 @@
                             <div style="margin-top:12px; padding-top:10px;
                                         border-top:1px solid #ddd; color:#0d6efd;
                                         font-weight:bold; text-align:center;">
-                                Clique para ver a ocorrência completa →
+                                Clique para editar a ocorrência →
                             </div>
                         </div>
                     </a>
