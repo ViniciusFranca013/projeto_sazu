@@ -114,18 +114,11 @@ return response($disk->get($ocorrencia->foto))
         return view('ocorrencias.edit', compact('ocorrencia'));
     }
 
-
-
-public function editAdmin(Ocorrencia $ocorrencia)
+    public function editAdmin(Ocorrencia $ocorrencia)
 {
-    // Verifica se o usuário é administrador
-    if (auth()->user()->usertype !== 'admin') {
-        abort(403, 'Acesso não autorizado.');
-    }
-
-    // Carrega a página exclusiva do administrador
     return view('ocorrencias.adit_admin', compact('ocorrencia'));
 }
+
 
     /**
      * Update the specified resource in storage.
