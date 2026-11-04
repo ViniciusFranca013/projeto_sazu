@@ -26,9 +26,6 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('posts', PostController::class); // add this resource route
 Route::resource('cidadaos', CidadaoController::class); // add this resource route
-
-
-
 Route::resource('ocorrencias', OcorrenciaController::class);
 require __DIR__.'/auth.php';
 
