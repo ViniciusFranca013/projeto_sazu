@@ -26,6 +26,15 @@ Route::middleware('auth')->group(function () {
 
 Route::resource('posts', PostController::class); // add this resource route
 Route::resource('cidadaos', CidadaoController::class); // add this resource route
+
+Route::get('/admin/ocorrencias/{ocorrencia}/edit', [
+    OcorrenciaController::class,
+    'editAdmin'
+])->middleware('auth')->name('ocorrencias.edit_admin');
+
+
+
+
 Route::resource('ocorrencias', OcorrenciaController::class);
 require __DIR__.'/auth.php';
 
