@@ -111,8 +111,13 @@ return response($disk->get($ocorrencia->foto))
      */
     public function edit(Ocorrencia $ocorrencia)
     {
-        return view('ocorrencias.edit', 'ocorrencias.edit_admin', compact('ocorrencia'));
+        return view('ocorrencias.edit', compact('ocorrencia'));
     }
+
+    public function editAdmin(Ocorrencia $ocorrencia)
+{
+    return view('ocorrencias.edit_admin', compact('ocorrencia'));
+}
 
     /**
      * Update the specified resource in storage.
