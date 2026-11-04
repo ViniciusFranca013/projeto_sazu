@@ -186,16 +186,6 @@
 
         <div class="card-header">
 
-            Ocorrências
-
-            <a href="{{ route('ocorrencias.create') }}"
-               class="btn btn-primary btn-sm float-end">
-                Registrar ocorrência
-                <i class="fa-solid fa-plus"></i>
-            </a>
-
-            
-
         </div>
 
         @if (Session::has('success'))
