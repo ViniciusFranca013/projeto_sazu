@@ -107,7 +107,9 @@
                 <input type="text" id="Cidade" name="Cidade" value="{{ old('Cidade', $ocorrencia->Cidade) }}" required 
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition"readonly>
             </div>
-            
+            <p>
+    Situação recebida: {{ $ocorrencia->getAttribute('situação') }}
+</p>
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">
                     Situação
