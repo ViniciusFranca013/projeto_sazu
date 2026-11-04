@@ -518,9 +518,7 @@
             // NOVO: cria o card com a foto e as informações
             
                 const card = `
-      
-
-                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}/edit">
+                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}/edit"
                     style="display:block; width:260px; max-width:100%;
                             color:#212529; text-decoration:none; font-family:Arial,sans-serif;">
 
