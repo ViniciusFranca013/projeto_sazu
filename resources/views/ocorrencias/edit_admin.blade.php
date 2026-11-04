@@ -109,13 +109,30 @@
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Situaçãooo</label>
-                <select type="text" id="situação" name="situação" value="{{ old('situação') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition"readonly>
+                <label class="block text-sm font-medium text-gray-700 mb-1">
+                    Situação
+                </label>
+
+                <select id="situação" name="situação" required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+
                     <option value="">Selecione uma opção</option>
-                    <option value="Buraco na via" {{ old('situação', $ocorrencia->situação) == 'Buraco na via' ? 'selected' : '' }}>Em análise</option>
-                    <option value="Queda de árvore" {{ old('situação', $ocorrencia->situação) == 'Queda de árvore' ? 'selected' : '' }}>Reparo em Andamento</option>
-                    <option value="Luz do poste queimada" {{ old('situação', $ocorrencia->situação) == 'Luz do poste queimada' ? 'selected' : '' }}>Reparo Realizado</option>
+
+                    <option value="Em análise"
+                        {{ old('situação', $ocorrencia->situação) == 'Em análise' ? 'selected' : '' }}>
+                        Em análise
+                    </option>
+
+                    <option value="Reparo em Andamento"
+                        {{ old('situação', $ocorrencia->situação) == 'Reparo em Andamento' ? 'selected' : '' }}>
+                        Reparo em Andamento
+                    </option>
+
+                    <option value="Reparo Realizado"
+                        {{ old('situação', $ocorrencia->situação) == 'Reparo Realizado' ? 'selected' : '' }}>
+                        Reparo Realizado
+                    </option>
+
                 </select>
             </div>
             
