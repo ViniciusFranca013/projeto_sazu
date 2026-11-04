@@ -171,7 +171,7 @@
             </article>
             <article class="card">
               <center><h3>Ocorrências Resolvidas</h3></center>
-              <center><p>0{{ $ocorrencias_deferido }}</p></center>
+              <center><p>0{{ $ocorrencias_resolviso }}</p></center>
               <center><h2>Problemas solucionados</h2></center>
             </article>
           </div>
