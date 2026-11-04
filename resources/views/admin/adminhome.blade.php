@@ -393,7 +393,6 @@
         const ocorrencias = @json($ocorrenciasMapa ?? []);
 
         // Base pública das imagens armazenadas no Laravel
-        const caminhoFotos = @json(asset('storage'));
 
         // NOVO: protege os textos exibidos dentro do card
         function escaparHTML(valor) {
@@ -409,6 +408,7 @@
         }
 
         ocorrencias.forEach(function (ocorrencia) {
+        const idOcorrencia = ocorrencia.id_reclamacao;
             const latitude = Number(ocorrencia.latitude);
             const longitude = Number(ocorrencia.longitude);
 
@@ -476,23 +476,19 @@
                 ocorrencia.Cidade
             ].filter(Boolean).join(', ');
 
-            // NOVO: monta o caminho da foto
+           
+           
+
+            // Monta o caminho da imagem pela rota privada
             let fotoHTML = '';
 
-            if (ocorrencia.foto) {
-                const caminhoFoto = caminhoFotos + '/' +
-                    String(ocorrencia.foto)
-                        .replace(/^\/+/, '')
-                        .split('/')
-                        .map(parte => encodeURIComponent(parte))
-                        .join('/');
-
+            if (ocorrencia.foto && idOcorrencia) {
                 fotoHTML = `
                     <img
                         src="/ocorrencias/${encodeURIComponent(idOcorrencia)}/imagem"
                         alt="Foto da ocorrência"
                         style="width:100%; height:130px; object-fit:cover;
-                               display:block; border-radius:8px 8px 0 0;"
+                            display:block; border-radius:8px 8px 0 0;"
                         onerror="this.style.display='none';"
                     >
                 `;
