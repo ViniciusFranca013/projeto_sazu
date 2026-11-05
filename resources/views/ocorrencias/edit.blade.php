@@ -183,14 +183,7 @@
              
             <div class="pt-2 flex justify-end gap-3">
                 
-                <button
-                    type="button"
-                    class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md transition duration-200 shadow-sm"
-                    data-bs-toggle="modal"
-                    data-bs-target="#modalExcluir{{ $ocorrencia->Id_reclamacao }}">
-                    Excluir
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+                
                 <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-md transition duration-200 shadow-sm">
                     Atualizar
                 </button>
