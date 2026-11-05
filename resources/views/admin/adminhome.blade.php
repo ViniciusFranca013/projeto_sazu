@@ -102,7 +102,7 @@
 
                 <!-- Logo / Nome -->
                 <a class="navbar-brand ms-5" href="#">
-                    Página de Administrador
+                    Página do Administrador
                 </a>
 
                 <!-- Botão à direita -->
@@ -151,7 +151,7 @@
             <!-- FIM DO MAPA DE OCORRÊNCIAS -->
 
            
-          Ocorrências
+          
 
           <div class="cards">
             <article class="card">
@@ -184,9 +184,7 @@
 
     <div class="card">
 
-        <div class="card-header">
-
-        </div>
+        
 
         @if (Session::has('success'))
             <span class="alert alert-success p-2">
