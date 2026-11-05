@@ -159,10 +159,7 @@
                     FOTO DA OCORRÊNCIA
                 </label>
 
-                {{-- Selecionar uma nova foto --}}
-                <input type="file" id="FOTO" name="foto"
-                    accept="image/jpeg,image/png,image/webp"
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md">
+                
 
                 {{-- ÚNICA área de pré-visualização --}}
                 <div class="mt-3">
