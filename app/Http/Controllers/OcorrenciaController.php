@@ -77,48 +77,17 @@ class OcorrenciaController extends Controller
         return view('ocorrencias.show', compact('ocorrencia'));
     }
 
-    public function imagem(Ocorrencia $ocorrencia)
+   public function imagem(Ocorrencia $ocorrencia)
 {
-    $user = auth()->user();
-
-    // Verifica se o usuário é administrador
-    if ($user->usertype !== 'admin') {
-
-        // Busca o cidadão associado ao usuário
-        $cidadao = $user->cidadao;
-
-        // Verifica se a ocorrência pertence ao cidadão
-        if (
-            !$cidadao ||
-            $ocorrencia->FK_CIDADAO_Id_cidadao != $cidadao->Id_cidadao
-        ) {
-            abort(403);
-        }
-    }
-
     // Recupera a imagem do Bucket privado
     $disk = Storage::disk();
 
-abort_unless($disk->exists($ocorrencia->foto), 404);
+    abort_unless($disk->exists($ocorrencia->foto), 404);
 
-return response($disk->get($ocorrencia->foto))
-    ->header('Content-Type', $disk->mimeType($ocorrencia->foto))
-    ->header('Cache-Control', 'private, no-store');
+    return response($disk->get($ocorrencia->foto))
+        ->header('Content-Type', $disk->mimeType($ocorrencia->foto))
+        ->header('Cache-Control', 'private, no-store');
 }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Ocorrencia $ocorrencia)
-    {
-        return view('ocorrencias.edit', compact('ocorrencia'));
-    }
-
-    public function editAdmin(Ocorrencia $ocorrencia)
-{
-    return view('ocorrencias.edit_admin', compact('ocorrencia'));
-}
-
     /**
      * Update the specified resource in storage.
      */

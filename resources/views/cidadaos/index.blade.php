@@ -481,11 +481,7 @@
                                 ${escaparHTML(dataFormatada)}
                             </p>
 
-                            <div style="margin-top:12px; padding-top:10px;
-                                        border-top:1px solid #ddd; color:#0d6efd;
-                                        font-weight:bold; text-align:center;">
-                                Clique para ver a ocorrência completa →
-                            </div>
+                            
                         </div>
                     </div>
                 `;
