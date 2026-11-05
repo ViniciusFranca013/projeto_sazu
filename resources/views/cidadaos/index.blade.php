@@ -107,7 +107,7 @@
             <!-- MAPA DE OCORRÊNCIAS -->
 
             <div class="mb-4">
-                <h5 class="mb-3">Mapa de ocorrências</h5>
+                <center><h5 class="mb-3">Mapa de ocorrências</h5></center>
 
             <div id="mapa-ocorrencias"
                 style="height: 400px; width: 100%; border-radius: 8px; background-color: lightgray;">
