@@ -10,6 +10,26 @@
         font-family: Verdana, Geneva, Tahoma, sans-serif;
         padding-bottom: 12px;
     }
+
+    .status-analise {
+    background-color: #fa7c4a ; /* Amarelo claro */
+    color: #ffffff;
+    font-weight: 500;
+  }
+  .status-andamento {
+    background-color: #4a7ffa ; /* Amarelo claro */
+    color: #ffffff;
+    font-weight: 500;
+  }
+  .status-realizado {
+    background-color: #69d969 ; /* Amarelo claro */
+    color: #ffffff;
+    font-weight: 500;
+  }
+  #situação option {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
 </style>
 
     <!-- Tailwind CSS que você já utiliza -->
@@ -109,9 +129,9 @@
             </div>
             
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Situação</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1" >Situação</label>
                 <input type="text" id="situação" name="situação" value="{{ old('situação', $ocorrencia->situação) }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    class="valor w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition status-celula"readonly >
             </div>
 
             {{-- MAPA DE LOCALIZAÇÃO DA OCORRÊNCIA --}}
@@ -334,4 +354,36 @@ document.addEventListener('DOMContentLoaded', function () {
         mapa.invalidateSize();
     }, 100);
 });
+</script>
+
+<script>
+    // 1. Seleciona o input pelo ID específico dele
+    const inputSituacao = document.getElementById("situação");
+
+    if (inputSituacao) {
+        // 2. Criamos uma função com a sua lógica de checagem
+        function atualizarCorStatus() {
+            const statusTexto = inputSituacao.value.trim();
+
+            // Remove as classes antigas para não acumular cores se o texto mudar
+            inputSituacao.classList.remove("status-analise", "status-andamento", "status-realizado");
+
+            // Aplica a nova classe baseada no texto atual
+            if (statusTexto === "Em análise") {
+                inputSituacao.classList.add("status-analise");
+            } 
+            else if (statusTexto === "Reparo em Andamento") {
+                inputSituacao.classList.add("status-andamento");
+            } 
+            else if (statusTexto === "Reparo Realizado") {
+                inputSituacao.classList.add("status-realizado");
+            }
+        }
+
+        // 3. Executa a função assim que a página carrega (para pegar o valor inicial)
+        atualizarCorStatus();
+
+        // 4. ATUALIZA NA HORA: Executa a função toda vez que o usuário digitar ou mudar o valor
+        inputSituacao.addEventListener("input", atualizarCorStatus);
+    }
 </script>
