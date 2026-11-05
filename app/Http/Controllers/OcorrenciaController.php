@@ -77,7 +77,7 @@ class OcorrenciaController extends Controller
         return view('ocorrencias.show', compact('ocorrencia'));
     }
 
-   public function imagem(Ocorrencia $ocorrencia)
+    public function imagem(Ocorrencia $ocorrencia)
 {
     // Recupera a imagem do Bucket privado
     $disk = Storage::disk();
@@ -88,6 +88,20 @@ class OcorrenciaController extends Controller
         ->header('Content-Type', $disk->mimeType($ocorrencia->foto))
         ->header('Cache-Control', 'private, no-store');
 }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Ocorrencia $ocorrencia)
+    {
+        return view('ocorrencias.edit', compact('ocorrencia'));
+    }
+
+    public function editAdmin(Ocorrencia $ocorrencia)
+{
+    return view('ocorrencias.edit_admin', compact('ocorrencia'));
+}
+
     /**
      * Update the specified resource in storage.
      */
