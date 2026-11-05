@@ -454,7 +454,7 @@
             // NOVO: cria o card com a foto e as informações
             
                 const card = `
-                    <a href="/ocorrencias/${encodeURIComponent(ocorrencia.id_reclamacao)}"
+                    <div
                     style="display:block; width:260px; max-width:100%;
                             color:#212529; text-decoration:none; font-family:Arial,sans-serif;">
 
@@ -487,7 +487,7 @@
                                 Clique para ver a ocorrência completa →
                             </div>
                         </div>
-                    </a>
+                    </div>
                 `;
 
 
