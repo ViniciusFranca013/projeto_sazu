@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 
 Route::get('/', function () {
-    return view('auth/login');
+    return view('welcome');
 });
 
 Route::get('/dashboard', [CidadaoController::class, 'index'])
@@ -18,19 +18,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/admin/ocorrencias/{ocorrencia}/edit', [
-    OcorrenciaController::class,
-    'editAdmin'
-])->name('ocorrencias.edit_admin');
-    Route::get('/ocorrencias/{ocorrencia}/imagem', [
-    OcorrenciaController::class,
-    'imagem'
-])->name('ocorrencias.imagem');
 });
 
-Route::resource('posts', PostController::class); // add this resource route
-Route::resource('cidadaos', CidadaoController::class); // add this resource route
+Route::resource('posts', PostController::class);
+Route::resource('cidadaos', CidadaoController::class);
 Route::resource('ocorrencias', OcorrenciaController::class);
 require __DIR__.'/auth.php';
-
-
