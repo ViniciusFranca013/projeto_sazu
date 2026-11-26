@@ -69,11 +69,20 @@
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="40">
             </div>
 
+            
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">cep</label>
-                <input type="text" id="title" name="cep" value="{{ old('cep') }}" required 
+                <label class="block text-sm font-medium text-gray-700 mb-1">CEP</label>
+
+                <input type="text"
+                    id="cep"
+                    name="cep"
+                    value="{{ old('cep') }}"
+                    placeholder="00000-000"
+                    maxlength="9"
+                    required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
+
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">rua</label>
