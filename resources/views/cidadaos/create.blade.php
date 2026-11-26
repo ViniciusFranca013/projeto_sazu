@@ -204,6 +204,33 @@
 
     </script>
 
+    <script>
+    // VALIDAÇÃO DO CPF
+function validarCPF() {
+    const quantidade = inputCPF.value.replace(/\D/g, "").length;
+
+    if (quantidade > 0 && quantidade < 11) {
+        inputCPF.setCustomValidity("Complete o campo");
+    } else {
+        inputCPF.setCustomValidity("");
+    }
+}
+
+// VALIDAÇÃO DO TELEFONE
+function validarTelefone() {
+    const quantidade = inputTelefone.value.replace(/\D/g, "").length;
+
+    if (quantidade > 0 && quantidade < 11) {
+        inputTelefone.setCustomValidity("Complete o campo");
+    } else {
+        inputTelefone.setCustomValidity("");
+    }
+}
+
+inputCPF.addEventListener("input", validarCPF);
+inputTelefone.addEventListener("input", validarTelefone);
+</script>
+
     
         
 
