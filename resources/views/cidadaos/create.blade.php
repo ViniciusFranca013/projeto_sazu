@@ -104,7 +104,7 @@ console.log(inputNome);
 
 inputNome.addEventListener("keypress", function(e){
 
-const Keycode = (e.Keycode ? e.Keycode : e.wich);
+const KeyCode = (e.KeyCode ? e.KeyCode : e.wich);
 if(Keycode >47 && Keycode <58){
     e.preventDefault();
 
