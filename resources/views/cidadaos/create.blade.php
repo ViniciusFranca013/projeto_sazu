@@ -233,22 +233,7 @@ inputCEP.addEventListener("blur", function() {
         });
 
 });
-    <script>
-    const inputCPF = document.querySelector("#cpf");
-    const formulario = inputCPF.closest("form");
 
-    formulario.addEventListener("submit", function(e) {
-
-        if (inputCPF.value.length !== 14) {
-            e.preventDefault();
-
-            alert("O CPF deve conter 11 números!");
-
-            inputCPF.focus();
-        }
-
-    });
-    </script>
 </script>
 </body>
 </html>
