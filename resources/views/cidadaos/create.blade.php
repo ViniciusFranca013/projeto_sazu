@@ -28,7 +28,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
                 <input type="text" id="nome" name="nome" value="{{ old('nome') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="60">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="60" minlength="5">
             </div>
 
             <div>
@@ -40,6 +40,7 @@
                     value="{{ old('CPF') }}"
                     placeholder="000.000.000-00"
                     maxlength="14"
+                    minlength="14"
                     required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
@@ -59,6 +60,7 @@
                     value="{{ old('telefone') }}"
                     placeholder="(15) 99999-9999"
                     maxlength="15"
+                    minlength="15"
                     required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
@@ -66,7 +68,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">email</label>
                 <input type="email" id="title" name="email" value="{{ old('email') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="40">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="40" minlength="15">
             </div>
 
             
@@ -79,6 +81,7 @@
                     value="{{ old('cep') }}"
                     placeholder="00000-000"
                     maxlength="9"
+                    minlength="9"
                     required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
@@ -87,7 +90,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">rua</label>
                 <input type="text" id="rua" name="rua" value="{{ old('rua') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" readonly>
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" readonly >
             </div>
 
             <div>
@@ -99,7 +102,7 @@
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">numero</label>
                 <input type="text" id="title" name="numero" value="{{ old('numero') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition"  maxlength="7">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition"  maxlength="7" minlength="1">
             </div>
 
             <div>
