@@ -178,6 +178,21 @@
         telefone = telefone.replace(/(\d{5})(\d)/, "$1-$2");
 
         inputTelefone.value = telefone;
+        const inputTelefone = document.querySelector("#telefone");
+
+    const formulario = inputTelefone.closest("form");
+
+    formulario.addEventListener("submit", function(e) {
+
+        if (inputTelefone.value.length !== 15) {
+            e.preventDefault();
+
+            alert("Digite um telefone celular completo!");
+
+            inputTelefone.focus();
+        }
+
+    });
 
     });
     </script>
