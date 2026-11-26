@@ -98,16 +98,16 @@
 </html>
 
 <script>
-const inputName = document.querySelector("#name")
+const inputNome = document.querySelector("#nome")
 
-console.log(inputName);
+console.log(inputNome);
 
-inputName.addEventListener("keypress", function(e){
+inputNome.addEventListener("keypress", function(e){
 
 const Keycode = (e.Keycode ? e.Keycode : e.wich);
 if(Keycode >47 && Keycode <58){
     e.preventDefault();
-    
+
 }
 
 });
