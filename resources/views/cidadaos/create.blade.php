@@ -51,8 +51,15 @@
             </div>
 
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Telefone</label>
-                <input type="tel" id="title" name="telefone" value="{{ old('telefone') }}" required 
+                <label class="block text-sm font-medium text-gray-700 mb-1">Telefone Celular</label>
+
+                <input type="tel"
+                    id="telefone"
+                    name="telefone"
+                    value="{{ old('telefone') }}"
+                    placeholder="(15) 99999-9999"
+                    maxlength="15"
+                    required
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
 
@@ -138,6 +145,31 @@
 
     });
     </script>
+
+    <script>
+    const inputTelefone = document.querySelector("#telefone");
+
+    inputTelefone.addEventListener("input", function() {
+
+        let telefone = inputTelefone.value;
+
+        // Remove tudo que não for número
+        telefone = telefone.replace(/\D/g, "");
+
+        // Limita a 11 números
+        telefone = telefone.substring(0, 11);
+
+        // Adiciona os parênteses do DDD
+        telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
+
+        // Adiciona o hífen
+        telefone = telefone.replace(/(\d{5})(\d)/, "$1-$2");
+
+        inputTelefone.value = telefone;
+
+    });
+    </script>
+
 
 </body>
 </html>
