@@ -172,6 +172,25 @@
             }
 
         });
+
+
+        formulario.addEventListener("submit", function(e) {
+
+            // Conta somente os números digitados
+            const quantidade = inputCPF.value.replace(/\D/g, "").length;
+
+            if (quantidade < 11) {
+                e.preventDefault();
+
+                const faltam = 11 - quantidade;
+
+                alert(`CPF incompleto! Faltam ${faltam} dígito(s).`);
+
+                inputCPF.focus();
+            }
+
+        });
+
         </script>
 
 
