@@ -155,6 +155,20 @@
 
         inputCPF.value = cpf;
 
+         const formulario = inputCPF.closest("form");
+
+    formulario.addEventListener("submit", function(e) {
+
+        if (inputCPF.value.length !== 15) {
+            e.preventDefault();
+
+            alert("Digite um CPF celular completo!");
+
+            inputCPF.focus();
+        }
+
+    });
+
     });
     </script>
 
