@@ -186,6 +186,22 @@
         }
     });
 
+    formulario.addEventListener("submit", function(e) {
+
+    if (inputCPF.value.replace(/\D/g, "").length < 11) {
+        inputCPF.setCustomValidity("CPF incompleto! Digite os 11 números.");
+    } else {
+        inputCPF.setCustomValidity("");
+    }
+
+    if (inputTelefone.value.replace(/\D/g, "").length < 11) {
+        inputTelefone.setCustomValidity("Telefone incompleto! Digite os 11 números.");
+    } else {
+        inputTelefone.setCustomValidity("");
+    }
+
+    });
+
     </script>
 
     
