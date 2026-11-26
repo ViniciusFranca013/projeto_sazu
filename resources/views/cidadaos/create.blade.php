@@ -135,42 +135,45 @@
         });
     </script>
 
-    <script>
-    const inputCPF = document.querySelector("#cpf");
+    
+        <script>
+        const inputCPF = document.querySelector("#cpf");
+        const formulario = inputCPF.closest("form");
 
-    inputCPF.addEventListener("input", function() {
+        // Formatação automática do CPF
+        inputCPF.addEventListener("input", function() {
 
-        let cpf = inputCPF.value;
+            let cpf = inputCPF.value;
 
-        // Remove tudo que não for número
-        cpf = cpf.replace(/\D/g, "");
+            // Remove tudo que não for número
+            cpf = cpf.replace(/\D/g, "");
 
-        // Limita a 11 números
-        cpf = cpf.substring(0, 11);
+            // Limita a 11 números
+            cpf = cpf.substring(0, 11);
 
-        // Adiciona os pontos e o hífen
-        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+            // Adiciona os pontos e o hífen
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
 
-        inputCPF.value = cpf;
+            inputCPF.value = cpf;
 
-         const formulario = inputCPF.closest("form");
+        });
 
-    formulario.addEventListener("submit", function(e) {
+        // Validação antes de enviar o formulário
+        formulario.addEventListener("submit", function(e) {
 
-        if (inputCPF.value.length !== 15) {
-            e.preventDefault();
+            if (inputCPF.value.length !== 14) {
+                e.preventDefault();
 
-            alert("Digite um CPF celular completo!");
+                alert("Digite um CPF completo!");
 
-            inputCPF.focus();
-        }
+                inputCPF.focus();
+            }
 
-    });
+        });
+        </script>
 
-    });
-    </script>
 
     <script>
     const inputTelefone = document.querySelector("#telefone");
