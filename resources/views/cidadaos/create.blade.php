@@ -23,14 +23,12 @@
             </div>
         @endif
 
-        
-
          <form action="{{ route('cidadaos.store') }}" method="POST" class="space-y-6">
             @csrf
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Nome Completo</label>
                 <input type="text" id="title" name="nome" value="{{ old('nome') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="60">
             </div>
 
             <div>
@@ -96,8 +94,22 @@
         </form>
 
     </div>
-
-
-    
 </body>
 </html>
+
+<script>
+const inputName = document.querySelector("#name")
+
+console.log(inputName);
+
+inputName.addEventListener("keypress", function(e){
+
+const Keycode = (e.Keycode ? e.Keycode : e.wich);
+if(Keycode >47 && Keycode <58){
+    e.preventDefault();
+    
+}
+
+});
+
+</script>
