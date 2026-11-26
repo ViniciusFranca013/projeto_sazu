@@ -115,12 +115,12 @@ class CidadaoController extends Controller
 public function store(Request $request)
 {
     $validatedData = $request->validate([
-        'CPF' => 'required|unique:cidadaos,CPF|max:14',
+        'CPF' => 'required|unique:cidadaos,CPF|max:19',
         'Bairro' => 'required|string',
         'Cidade' => 'required|string',
         'nome' => 'required|string',
         'data_nascimento' => 'required|date',
-        'telefone' => 'required|string|unique:cidadaos,telefone|max:14',
+        'telefone' => 'required|string|unique:cidadaos,telefone|max:19',
         'email' => 'required|string|email|max:50',
         'cep' => 'required|string',
         'rua' => 'required|string',
