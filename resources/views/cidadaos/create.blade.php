@@ -33,8 +33,15 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">CPF</label>
-                <input type="text" id="title" name="CPF" value="{{ old('CPF') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="11">
+
+                <input type="text"
+                    id="cpf"
+                    name="CPF"
+                    value="{{ old('CPF') }}"
+                    placeholder="000.000.000-00"
+                    maxlength="14"
+                    required
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
             </div>
 
             <div>
@@ -108,6 +115,30 @@
 
         });
     </script>
+
+    <script>
+    const inputCPF = document.querySelector("#cpf");
+
+    inputCPF.addEventListener("input", function() {
+
+        let cpf = inputCPF.value;
+
+        // Remove tudo que não for número
+        cpf = cpf.replace(/\D/g, "");
+
+        // Limita a 11 números
+        cpf = cpf.substring(0, 11);
+
+        // Adiciona os pontos e o hífen
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+        inputCPF.value = cpf;
+
+    });
+    </script>
+
 </body>
 </html>
 
