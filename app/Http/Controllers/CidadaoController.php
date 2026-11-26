@@ -112,43 +112,50 @@ class CidadaoController extends Controller
      * Store a newly created resource in storage.
      */
      
-public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'CPF' => 'required|unique:cidadaos,CPF|max:19',
-        'Bairro' => 'required|string',
-        'Cidade' => 'required|string',
-        'nome' => 'required|string',
-        'data_nascimento' => 'required|date',
-        'telefone' => 'required|string|unique:cidadaos,telefone|max:19',
-        'email' => 'required|string|email|max:50',
-        'cep' => 'required|string',
-        'rua' => 'required|string',
-        'numero' => 'required|string',
-    ]);
 
-    $user = DB::transaction(function () use ($validatedData) {
+        public function store(Request $request)
+        {
+            // Remove pontos e hífen do CPF
+            $request->merge([
+                'CPF' => preg_replace('/\D/', '', $request->CPF),
+            ]);
 
-        $user = User::create([
-            'usertype' => 'user',
-            'email' => $validatedData['email'],
-            'password' => Hash::make($validatedData['CPF']),
-        ]);
+            $validatedData = $request->validate([
+                'CPF' => 'required|unique:cidadaos,CPF|digits:11',
+                'Bairro' => 'required|string',
+                'Cidade' => 'required|string',
+                'nome' => 'required|string',
+                'data_nascimento' => 'required|date',
+                'telefone' => 'required|string|unique:cidadaos,telefone|max:19',
+                'email' => 'required|string|email|max:50',
+                'cep' => 'required|string',
+                'rua' => 'required|string',
+                'numero' => 'required|string',
+            ]);
 
-        $validatedData['fk_usuario'] = $user->id;
+            $user = DB::transaction(function () use ($validatedData) {
 
-        Cidadao::create($validatedData);
+                $user = User::create([
+                    'usertype' => 'user',
+                    'email' => $validatedData['email'],
+                    'password' => Hash::make($validatedData['CPF']),
+                ]);
 
-        return $user;
-    });
+                $validatedData['fk_usuario'] = $user->id;
 
-    Auth::login($user);
+                Cidadao::create($validatedData);
 
-    $request->session()->regenerate();
+                return $user;
+            });
 
-    return redirect()->route('cidadaos.index')
-        ->with('success', 'Cadastro realizado com sucesso!');
-}
+            Auth::login($user);
+
+            $request->session()->regenerate();
+
+            return redirect()->route('cidadaos.index')
+                ->with('success', 'Cadastro realizado com sucesso!');
+        }
+
 
     /**
      * Display the specified resource.
