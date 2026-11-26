@@ -135,103 +135,64 @@
         });
     </script>
 
-    
-        <script>
-        const inputCPF = document.querySelector("#cpf");
-        const formulario = inputCPF.closest("form");
-
-        // Formatação automática do CPF
-        inputCPF.addEventListener("input", function() {
-
-            let cpf = inputCPF.value;
-
-            // Remove tudo que não for número
-            cpf = cpf.replace(/\D/g, "");
-
-            // Limita a 11 números
-            cpf = cpf.substring(0, 11);
-
-            // Adiciona os pontos e o hífen
-            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-            cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
-            cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-
-            inputCPF.value = cpf;
-
-        });
-
-        // Validação antes de enviar o formulário
-        formulario.addEventListener("submit", function(e) {
-
-            if (inputCPF.value.length !== 14) {
-                e.preventDefault();
-
-                alert("Digite um CPF completo!");
-
-                inputCPF.focus();
-            }
-
-        });
-
-
-        formulario.addEventListener("submit", function(e) {
-
-            // Conta somente os números digitados
-            const quantidade = inputCPF.value.replace(/\D/g, "").length;
-
-            if (quantidade < 11) {
-                e.preventDefault();
-
-                const faltam = 11 - quantidade;
-
-                alert(`CPF incompleto! Faltam ${faltam} dígito(s).`);
-
-                inputCPF.focus();
-            }
-
-        });
-
-        </script>
-
-
     <script>
+    const formulario = document.querySelector("form");
+    const inputCPF = document.querySelector("#cpf");
     const inputTelefone = document.querySelector("#telefone");
 
+    // FORMATAÇÃO DO CPF
+    inputCPF.addEventListener("input", function() {
+        let cpf = inputCPF.value.replace(/\D/g, "").substring(0, 11);
+
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2");
+        cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+        inputCPF.value = cpf;
+    });
+
+    // FORMATAÇÃO DO TELEFONE
     inputTelefone.addEventListener("input", function() {
+        let telefone = inputTelefone.value.replace(/\D/g, "").substring(0, 11);
 
-        let telefone = inputTelefone.value;
-
-        // Remove tudo que não for número
-        telefone = telefone.replace(/\D/g, "");
-
-        // Limita a 11 números
-        telefone = telefone.substring(0, 11);
-
-        // Adiciona os parênteses do DDD
         telefone = telefone.replace(/^(\d{2})(\d)/, "($1) $2");
-
-        // Adiciona o hífen
         telefone = telefone.replace(/(\d{5})(\d)/, "$1-$2");
 
         inputTelefone.value = telefone;
-        const inputTelefone = document.querySelector("#telefone");
+    });
 
-    const formulario = inputTelefone.closest("form");
-
+    // VALIDAÇÃO ANTES DE ENVIAR
     formulario.addEventListener("submit", function(e) {
 
-        if (inputTelefone.value.length !== 15) {
+        const quantidadeCPF = inputCPF.value.replace(/\D/g, "").length;
+        const quantidadeTelefone = inputTelefone.value.replace(/\D/g, "").length;
+
+        if (quantidadeCPF < 11) {
             e.preventDefault();
 
-            alert("Digite um telefone celular completo!");
+            alert(`CPF incompleto! Faltam ${11 - quantidadeCPF} dígito(s).`);
 
-            inputTelefone.focus();
+            inputCPF.focus();
+            return;
         }
 
+        if (quantidadeTelefone < 11) {
+            e.preventDefault();
+
+            alert(`Telefone incompleto! Faltam ${11 - quantidadeTelefone} dígito(s).`);
+
+            inputTelefone.focus();
+            return;
+        }
     });
 
-    });
     </script>
+
+    
+        
+
+
+   
 
 <script>
 
