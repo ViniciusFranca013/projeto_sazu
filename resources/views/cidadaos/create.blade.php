@@ -86,14 +86,14 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">rua</label>
-                <input type="text" id="title" name="rua" value="{{ old('rua') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                <input type="text" id="rua" name="rua" value="{{ old('rua') }}" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" readonly>
             </div>
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Bairro</label>
-                <input type="text" id="title" name="Bairro" value="{{ old('Bairro') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                <input type="text" id="bairro" name="Bairro" value="{{ old('Bairro') }}" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" readonly>
             </div>
 
             <div>
@@ -104,8 +104,8 @@
 
             <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Cidade</label>
-                <input type="text" id="title" name="Cidade" value="{{ old('Cidade') }}" required 
-                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                <input type="text" id="cidade" name="Cidade" value="{{ old('Cidade') }}" required 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" readonly>
             </div>
             
             
@@ -178,6 +178,63 @@
 
     });
     </script>
+
+<script>
+
+const inputCEP = document.querySelector("#cep");
+
+inputCEP.addEventListener("input", function() {
+
+    // Remove caracteres que não sejam números
+    let cep = inputCEP.value.replace(/\D/g, "");
+
+    // Limita a 8 números
+    cep = cep.substring(0, 8);
+
+    // Adiciona o hífen
+    cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+
+    inputCEP.value = cep;
+
+});
+
+inputCEP.addEventListener("blur", function() {
+
+    // Remove a formatação
+    let cep = inputCEP.value.replace(/\D/g, "");
+
+    // Verifica se possui 8 números
+    if (cep.length !== 8) {
+        return;
+    }
+
+    // Consulta a API ViaCEP
+    fetch(`https://viacep.com.br/ws/${cep}/json/`)
+        .then(response => response.json())
+        .then(dados => {
+
+            // Verifica se o CEP existe
+            if (dados.erro) {
+                alert("CEP não encontrado!");
+                return;
+            }
+
+            // Preenche os campos automaticamente
+            document.querySelector("#rua").value = dados.logradouro;
+            document.querySelector("#bairro").value = dados.bairro;
+            document.querySelector("#cidade").value = dados.localidade;
+
+        })
+        .catch(() => {
+            alert("Erro ao consultar o CEP. Tente novamente.");
+        });
+
+});
+
+</script>
+</body>
+</html>
+
 
 
 </body>
