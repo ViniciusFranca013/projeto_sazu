@@ -246,6 +246,8 @@ inputCEP.addEventListener("input", function() {
     // Remove caracteres que não sejam números
     let cep = inputCEP.value.replace(/\D/g, "");
 
+    inputCEP.setCustomValidity("");
+
     // Limita a 8 números
     cep = cep.substring(0, 8);
 
@@ -273,9 +275,13 @@ inputCEP.addEventListener("blur", function() {
 
             // Verifica se o CEP existe
             if (dados.erro) {
-                alert("CEP não encontrado!");
+                inputCEP.setCustomValidity("CEP NÃO ENCONTRADO");
+                inputCEP.reportValidity();
                 return;
             }
+
+            // CEP encontrado: limpa qualquer mensagem anterior
+            inputCEP.setCustomValidity("");
 
             // Preenche os campos automaticamente
             document.querySelector("#rua").value = dados.logradouro;
