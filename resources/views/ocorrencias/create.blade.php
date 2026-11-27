@@ -427,17 +427,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const inputCEP = document.querySelector("#cep");
 
+const inputCEP = document.querySelector("#CEP");
+
 inputCEP.addEventListener("input", function() {
 
     // Remove caracteres que não sejam números
     let cep = inputCEP.value.replace(/\D/g, "");
 
-    inputCEP.setCustomValidity("");
-
     // Limita a 8 números
     cep = cep.substring(0, 8);
 
-    // Adiciona o hífen
+    // Adiciona automaticamente o traço
     cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
 
     inputCEP.value = cep;
