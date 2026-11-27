@@ -425,4 +425,23 @@ document.addEventListener('DOMContentLoaded', function () {
         erroLocalizacao.classList.add('hidden');
     });
 
+    const inputCEP = document.querySelector("#cep");
+
+inputCEP.addEventListener("input", function() {
+
+    // Remove caracteres que não sejam números
+    let cep = inputCEP.value.replace(/\D/g, "");
+
+    inputCEP.setCustomValidity("");
+
+    // Limita a 8 números
+    cep = cep.substring(0, 8);
+
+    // Adiciona o hífen
+    cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+
+    inputCEP.value = cep;
+
+});
+
 </script>
