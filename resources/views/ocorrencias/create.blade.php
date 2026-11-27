@@ -425,7 +425,6 @@ document.addEventListener('DOMContentLoaded', function () {
         erroLocalizacao.classList.add('hidden');
     });
 
-    const inputCEP = document.querySelector("#cep");
 
 const inputCEP = document.querySelector("#CEP");
 
