@@ -426,20 +426,23 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
 
-const inputCEP = document.querySelector("#CEP");
+const inputCEP = document.getElementById("CEP");
 
 inputCEP.addEventListener("input", function() {
 
-    // Remove caracteres que não sejam números
-    let cep = inputCEP.value.replace(/\D/g, "");
+    // Permite somente números
+    let cep = this.value.replace(/\D/g, "");
 
-    // Limita a 8 números
+    // Limita a 8 dígitos
     cep = cep.substring(0, 8);
 
-    // Adiciona automaticamente o traço
-    cep = cep.replace(/^(\d{5})(\d)/, "$1-$2");
+    // Insere o hífen após o quinto número
+    if (cep.length > 5) {
+        cep = cep.substring(0, 5) + "-" + cep.substring(5);
+    }
 
-    inputCEP.value = cep;
+    // Atualiza o campo
+    this.value = cep;
 
 });
 
