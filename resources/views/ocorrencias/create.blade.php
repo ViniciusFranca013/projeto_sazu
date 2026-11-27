@@ -71,7 +71,7 @@
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">CEP</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">dsdsCEP</label>
                 <input type="text" id="CEP" name="CEP" value="{{ old('CEP') }}" required 
                     class="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 outline-none transition" maxlength="9">
             </div>
